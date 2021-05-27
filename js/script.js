@@ -39,14 +39,53 @@ function validateInput(guess) {
 function makeGuess(letter) {
     const altLetter = letter.toUpperCase();
     if (guesses.includes(altLetter)) {
-        message.InnerText = "You've already guessed that letter! Try again."
+        message.innerText = "You've already guessed that letter! Try again."
         } else {
         guesses.push(altLetter);
         guessesLeft -= 1;
         spanRemain.innerText = `${guessesLeft} guesses`
         console.log(guesses)
+        updateUserGuesses();
+        updateWordDisplay(guesses)
+        checkForWin(word)
     }
 }
+
+
+function updateUserGuesses() {
+    guessedDisplay.innerHTML = "";
+    for (let guess of guesses) {
+        let listItem = document.createElement("li");
+        listItem.innerText = guess;
+        guessedDisplay.append(listItem)
+    }
+}
+
+function updateWordDisplay(array) {
+    const wordUpper = word.toUpperCase();
+    const wordArray = wordUpper.split("");
+    let rightWord = [];
+    for (let item of wordArray) {
+        if (array.includes(item)) {
+            rightWord.push(item.toUpperCase());
+           
+        } else {
+            rightWord.push("_")
+        }
+    }
+  
+    console.log(rightWord)
+    wordDisplay.innerText = rightWord.join("")
+    console.log(wordDisplay.innerText)
+}
+
+function checkForWin(word) {
+    if (word.toUpperCase() === wordDisplay.innerText) {
+        message.classList.add("win");
+        message.innerText = "Great Job! You've guessed the word."
+    }
+}
+
 
 // Game sequence
 
