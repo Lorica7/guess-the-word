@@ -10,7 +10,7 @@ const message = document.querySelector(".message");
 const newGameButton = document.querySelector(".play-again");
 const blanks = [];
 const guesses = [];
-let word = ""
+let word = "";
 let guessesLeft = 8;
 
 function getRandom(textData) {
@@ -23,10 +23,10 @@ const grabWord = async function (){
     const data = await fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
     const textData = await data.text();
     const wordArr = textData.split("\n")
-    const word = getRandom(wordArr);
-    word.trim();
+    word = getRandom(wordArr).trim()
     console.log(word)
-   
+    // displayBlanks(word);
+    return word
 }
 
 function displayBlanks(word) {
@@ -138,9 +138,10 @@ function startNew() {
 }
 
 // Game sequence
-grabWord();
 
-displayBlanks(word);
+grabWord().then(result => displayBlanks(result));
+
+
 
 //EVENT LISTENER FOR GUESS BUTTON
 
