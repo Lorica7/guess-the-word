@@ -10,7 +10,7 @@ const message = document.querySelector(".message");
 const newGameButton = document.querySelector(".play-again");
 const blanks = [];
 const guesses = [];
-let word = "test";
+let word = "testing";
 let guessesLeft = 8;
 
 
@@ -42,17 +42,40 @@ function makeGuess(letter) {
         message.innerText = "You've already guessed that letter! Try again."
         } else {
         guesses.push(altLetter);
-        guessesLeft -= 1;
-        spanRemain.innerText = `${guessesLeft} guesses`
         console.log(guesses)
-        updateUserGuesses();
+        showUserGuesses();
+        calcGameProgress(altLetter)
         updateWordDisplay(guesses)
         checkForWin(word)
     }
 }
 
+function calcGameProgress(altLetter) {
+    const uWord = word.toUpperCase();
+  if (!uWord.includes(altLetter)) {
+    message.innerText = `Sorry, the word doesn't contain ${altLetter}. Keep Trying`;
+    guessesLeft -= 1;
+  } else {
+    message.innerText = `Great guess!  ${altLetter} is in the letter`;
+  }
+  if (guessesLeft === 0) {
+      gameOver();
+  } else if (guessesLeft === 1) {
+      message.innerText = "Only one guess left!"
+    spanRemain.innerText = `${guessesLeft} guess`;
+  } else {
+    spanRemain.innerText = `${guessesLeft} guesses`;
+  }
+};
 
-function updateUserGuesses() {
+function gameOver() {
+    message.innerText = `Game over! The word was ${word}`;
+    spanRemain.innerText = "0 guesses";
+    guessBtn.disabled = true;
+}
+
+
+function showUserGuesses() {
     guessedDisplay.innerHTML = "";
     for (let guess of guesses) {
         let listItem = document.createElement("li");
@@ -83,6 +106,7 @@ function checkForWin(word) {
     if (word.toUpperCase() === wordDisplay.innerText) {
         message.classList.add("win");
         message.innerText = "Great Job! You've guessed the word."
+        guessBtn.disabled = true;
     }
 }
 
