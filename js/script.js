@@ -10,43 +10,58 @@ const message = document.querySelector(".message");
 const newGameButton = document.querySelector(".play-again");
 const blanks = [];
 const guesses = [];
-let word = "testing";
+let word = ""
 let guessesLeft = 8;
 
+function getRandom(textData) {
+    let random = Math.floor(Math.random() * textData.length);
+    word = textData[random];
+    return word;
+}
+
+const grabWord = async function (){
+    const data = await fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
+    const textData = await data.text();
+    const wordArr = textData.split("\n")
+    const word = getRandom(wordArr);
+    word.trim();
+    console.log(word)
+   
+}
 
 function displayBlanks(word) {
     for (let i = 0; i < word.length; i++){
-        blanks.push("_ ")
+        blanks.push("_ ");
     }
-    wordDisplay.innerText = blanks.join(" ")
+    wordDisplay.innerText = blanks.join(" ");
 }
 
 function validateInput(guess) {
     // accept only letters
     const accept = /[a-zA-Z]/;
     if (guess.length === 0) {
-        message.innerText = "Please enter a letter"
+        message.innerText = "Please enter a letter";
     } else if (guess.length > 1) {
-        message.innerText = "Please enter only one letter" 
+        message.innerText = "Please enter only one letter";
     }else if  (!guess.match(accept)) {
-        message.innerText = "You can only enter a single character from A to Z"
+        message.innerText = "You can only enter a single character from A to Z";
     } else {
-        console.log("good input")
-        return guess
+        console.log("good input");
+        return guess;
     }
 }
 
 function makeGuess(letter) {
     const altLetter = letter.toUpperCase();
     if (guesses.includes(altLetter)) {
-        message.innerText = "You've already guessed that letter! Try again."
+        message.innerText = "You've already guessed that letter! Try again.";
         } else {
         guesses.push(altLetter);
-        console.log(guesses)
+        console.log(guesses);
         showUserGuesses();
-        calcGameProgress(altLetter)
-        updateWordDisplay(guesses)
-        checkForWin(word)
+        calcGameProgress(altLetter);
+        updateWordDisplay(guesses);
+        checkForWin(word);
     }
 }
 
@@ -61,7 +76,7 @@ function calcGameProgress(altLetter) {
   if (guessesLeft === 0) {
       gameOver();
   } else if (guessesLeft === 1) {
-      message.innerText = "Only one guess left!"
+      message.innerText = "Only one guess left!";
     spanRemain.innerText = `${guessesLeft} guess`;
   } else {
     spanRemain.innerText = `${guessesLeft} guesses`;
@@ -72,6 +87,7 @@ function gameOver() {
     message.innerText = `Game over! The word was ${word}`;
     spanRemain.innerText = "0 guesses";
     guessBtn.disabled = true;
+    newGameButton.classList.remove("hide");
 }
 
 
@@ -80,7 +96,7 @@ function showUserGuesses() {
     for (let guess of guesses) {
         let listItem = document.createElement("li");
         listItem.innerText = guess;
-        guessedDisplay.append(listItem)
+        guessedDisplay.append(listItem);
     }
 }
 
@@ -97,23 +113,34 @@ function updateWordDisplay(array) {
         }
     }
   
-    console.log(rightWord)
+    console.log(rightWord);
     wordDisplay.innerText = rightWord.join("")
-    console.log(wordDisplay.innerText)
+    console.log(wordDisplay.innerText);
 }
 
 function checkForWin(word) {
     if (word.toUpperCase() === wordDisplay.innerText) {
         message.classList.add("win");
-        message.innerText = "Great Job! You've guessed the word."
+        message.innerText = "Great Job! You've guessed the word.";
         guessBtn.disabled = true;
+        newGameButton.classList.remove("hide");
     }
 }
 
+function startNew() {
+    grabWord();
+    displayBlanks(word);
+    guessBtn.disabled = false;
+    newGameButton.classList.add("hide");
+    guessesLeft = 8;
+    spanRemain.innerText = `${guessesLeft} guesses`;
+    message.innerText = "";
+}
 
 // Game sequence
+grabWord();
 
-displayBlanks(word)
+displayBlanks(word);
 
 //EVENT LISTENER FOR GUESS BUTTON
 
@@ -121,10 +148,10 @@ guessBtn.addEventListener("click", (e) => {
     e.preventDefault();
     message.innerText = "";
     const guess = e.target.form[0].value;
-    console.log(guess)
-    input.value = ""
-   let validated =  validateInput(guess)
+    console.log(guess);
+    input.value = "";
+    let validated = validateInput(guess);
     if (validated) {
-        makeGuess(validated)
+        makeGuess(validated);
     }
 })
