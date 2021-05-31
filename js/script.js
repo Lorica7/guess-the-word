@@ -8,8 +8,8 @@ const remaining = document.querySelector(".remaining");
 const spanRemain = document.querySelector("span");
 const message = document.querySelector(".message");
 const newGameButton = document.querySelector(".play-again");
-const blanks = [];
-const guesses = [];
+let blanks = [];
+let guesses = [];
 let word = "";
 let guessesLeft = 8;
 
@@ -127,8 +127,11 @@ function checkForWin(word) {
 }
 
 function startNew() {
-    grabWord();
-    displayBlanks(word);
+    wordDisplay.innerIext = "";
+    blanks = [];
+    guesses = [];
+    guessedDisplay.innerText = "";
+    grabWord().then(result => displayBlanks(result));
     guessBtn.disabled = false;
     newGameButton.classList.add("hide");
     guessesLeft = 8;
@@ -138,7 +141,7 @@ function startNew() {
 
 // Game sequence
 
-grabWord().then(result => displayBlanks(result));
+startNew();
 
 
 
@@ -154,4 +157,8 @@ guessBtn.addEventListener("click", (e) => {
     if (validated) {
         makeGuess(validated);
     }
+})
+
+newGameButton.addEventListener("click", (e) => {
+    startNew();
 })
