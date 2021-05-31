@@ -22,10 +22,9 @@ function getRandom(textData) {
 const grabWord = async function (){
     const data = await fetch("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
     const textData = await data.text();
-    const wordArr = textData.split("\n")
-    word = getRandom(wordArr).trim()
-    console.log(word)
-    // displayBlanks(word);
+    const wordArr = textData.split("\n");
+    word = getRandom(wordArr).trim();
+    console.log(word);
     return word
 }
 
